@@ -52,4 +52,4 @@ ipfs config Datastore.StorageMax "3000GB"
 ipfs config Datastore.StorageGCWatermark 99 --json
 ipfs config Pubsub.Router "gossipsub"
 ipfs config --json Swarm.DisableBandwidthMetrics false
-ipfs daemon
+ipfs daemon &
