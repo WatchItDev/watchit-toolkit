@@ -1,10 +1,15 @@
 #!/bin/sh
 # get my public ip
-ip=`dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"'`
-peers=`cat peers.json`
+ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
+peers=$(cat peers.json)
 
-if ! command -v -- "ipfs" >/dev/null ; then
+if ! command -v -- "ipfs" >/dev/null; then
        echo "Intalling ipfs"
+       wget https://dist.ipfs.tech/kubo/v0.28.0/kubo_v0.28.0_linux-amd64.tar.gz
+       tar -xvzf kubo_v0.28.0_linux-amd64.tar.gz
+       cd kubo
+       sudo bash install.sh
+       ipfs --version
 fi
 
 export IPFS_PATH=${1:-/ipfsdata}
@@ -42,11 +47,9 @@ ipfs config Swarm.AddrFilters '[
        "/ip6/fe80::/ipcidr/10"
 ]' --json
 
-
 ipfs config Datastore.GCPeriod "144h"
 ipfs config Datastore.StorageMax "3000GB"
 ipfs config Datastore.StorageGCWatermark 99 --json
 ipfs config Pubsub.Router "gossipsub"
 ipfs config --json Swarm.DisableBandwidthMetrics false
-ipfs daemon  
-
+ipfs daemon
