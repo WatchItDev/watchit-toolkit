@@ -1,0 +1,27 @@
+{
+  "name": "watchit-migration",
+  "version": "1.0.0",
+  "description": "Watchit migration tool.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "npm": ">=10.0.0 <11.0.0",
+    "node": ">=20.0.0 <21.0.0"
+  },
+  "author": "geolffreym",
+  "license": "ISC",
+  "dependencies": {
+    "@chainsafe/libp2p-gossipsub": "^13.0.0",
+    "@helia/json": "^3.0.3",
+    "@helia/unixfs": "^3.0.6",
+    "@orbitdb/core": "^2.1.0",
+    "blockstore-fs": "^1.1.10",
+    "helia": "^4.2.1",
+    "kubo-rpc-client": "^4.1.1",
+    "moment": "^2.30.1",
+    "sharp": "^0.33.3"
+  }
+}

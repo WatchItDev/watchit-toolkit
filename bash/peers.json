@@ -1,0 +1,49 @@
+[
+  
+  {
+    "ID": "12D3KooWGaHbxpDWn4JVYud899Wcpa4iHPa3AMYydfxQDb3MhDME",
+    "Addrs": [
+      "/dnsaddr/ipfs.ssi.eecc.de"
+    ]
+  },
+
+  {
+    "ID": "QmWaik1eJcGHq1ybTWe7sezRfqKNcDRNkeBaLnGwQJz1Cj",
+    "Addrs": [
+      "/dnsaddr/fra1-1.hostnodes.pinata.cloud"
+    ]
+  },
+
+  {
+    "ID": "QmRjLSisUCHVpFa5ELVvX3qVPfdxajxWJEHs9kN3EcxAW6",
+    "Addrs": [
+      "/dnsaddr/nyc1-1.hostnodes.pinata.cloud"
+    ]
+  },
+
+  {
+    "ID": "QmR69wtWUMm1TWnmuD4JqC1TWLZcc8iR2KrTenfZZbiztd",
+    "Addrs": [
+      "/ip4/104.210.43.77"
+    ]
+  },
+  {
+    "ID": "QmcFf2FH3CEgTNHeMRGhN7HNHU1EXAxoEk6EFuSyXCsvRE",
+    "Addrs": [
+      "/dnsaddr/node-1.ingress.cloudflare-ipfs.com"
+    ]
+  },
+  {
+    "ID": "QmcFmLd5ySfk2WZuJ1mfSWLDjdmHZq7rSAua4GoeSQfs1z",
+    "Addrs": [
+      "/dnsaddr/node-2.ingress.cloudflare-ipfs.com"
+    ]
+  },
+  {
+    "ID": "12D3KooWQ85aSCFwFkByr5e3pUCQeuheVhobVxGSSs1DrRQHGv1t",
+    "Addrs": [
+      "/dnsaddr/node-1.ipfs.4everland.net"
+    ]
+  }
+  
+]

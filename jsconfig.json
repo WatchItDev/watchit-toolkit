@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "lib": ["esnext"],
+    "target": "esnext",
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@root/*": [
+        "./*"
+      ],
+      "@src/*": [
+        "src/*"
+      ],
+      
+    }
+  }
+}
