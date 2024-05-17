@@ -19,8 +19,8 @@ echo "Running ipfs in ${IPFS_PATH}"
 # shellcheck disable=SC2006
 # http://docs.ipfs.tech.ipns.localhost:8080/how-to/peering-with-content-providers/#content-provider-list
 ipfs config Peering.Peers "$peers" --json
-ipfs config Addresses.API '/ip4/0.0.0.0/tcp/5001'
-ipfs config Addresses.Gateway '/ip4/0.0.0.0/tcp/8080'
+ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
+ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
 
 # # shellcheck disable=SC2016
 ipfs config Addresses.AppendAnnounce "[
