@@ -7,9 +7,6 @@ mounts=$(cat s3.json)
 PROFILE=${2:default}
 export IPFS_PATH=${1:-~/.ipfs}
 
-
-echo $IPFS_PATH
-echo $PROFILE
 if ! command -v -- "ipfs" >/dev/null; then
        echo "Intalling ipfs"
        wget https://dist.ipfs.tech/kubo/v0.28.0/kubo_v0.28.0_linux-amd64.tar.gz
@@ -31,11 +28,7 @@ fi
 echo "Running ipfs in ${IPFS_PATH}"
 [ ! -e $IPFS_PATH ] && ipfs init --empty-repo
 
-if [ "$PROFILE" = "server" ]; then
-       echo "Running ipfs in server mode"
-       ipfs config profile apply server
-       ipfs config Datastore.Spec.mounts "$mounts" --json
-fi
+
 # shellcheck disable=SC2006
 # http://docs.ipfs.tech.ipns.localhost:8080/how-to/peering-with-content-providers/#content-provider-list
 ipfs config Peering.Peers "$peers" --json
@@ -67,6 +60,12 @@ ipfs config Swarm.AddrFilters '[
        "/ip6/fc00::/ipcidr/7",
        "/ip6/fe80::/ipcidr/10"
 ]' --json
+
+if [ "$PROFILE" = "server" ]; then
+       echo "Running ipfs in server mode"
+       ipfs config profile apply server
+       ipfs config Datastore.Spec.mounts "$mounts" --json
+fi
 
 ipfs config Datastore.GCPeriod "144h"
 ipfs config Datastore.StorageMax "3000GB"
