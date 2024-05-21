@@ -2,7 +2,7 @@
 # get my public ip
 ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 peers=$(cat peers.json)
-mounts=$(cat mount.json)
+mounts=$(cat s3.json)
 
 export IPFS_PATH=${1:-~/ipfsdata}
 
@@ -27,13 +27,17 @@ fi
 echo "Running ipfs in ${IPFS_PATH}"
 [ ! -e $IPFS_PATH ] && ipfs init --empty-repo
 
+if [ $2 == "server" ]; then
+       echo "Running ipfs in server mode"
+       ipfs config profile apply server
+       ipfs config Datastore.Spec.mounts "$mounts" --json
+fi
 # shellcheck disable=SC2006
 # http://docs.ipfs.tech.ipns.localhost:8080/how-to/peering-with-content-providers/#content-provider-list
 ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
 
-ipfs config Datastore.Spec.mounts "$mounts" --json
 
 # # shellcheck disable=SC2016
 ipfs config Addresses.AppendAnnounce "[
