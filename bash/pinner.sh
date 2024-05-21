@@ -7,7 +7,7 @@ jq --compact-output '.manifest[]' $1 | while read i; do
     
     
     ipfs pin add $data
-    echo "Pinned data "
+    echo "Pinned data"
     ipfs pin add $small
     ipfs pin add $medium
     ipfs pin add $large
