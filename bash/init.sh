@@ -4,7 +4,6 @@ ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 peers=$(cat peers.json)
 mounts=$(cat mount.json)
 
-sudo sysctl -w net.core.wmem_max=7500000
 export IPFS_PATH=${1:-~/ipfsdata}
 
 if ! command -v -- "ipfs" >/dev/null; then
