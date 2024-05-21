@@ -44,6 +44,12 @@
     "Addrs": [
       "/dnsaddr/node-1.ipfs.4everland.net"
     ]
+  },
+  {
+    "ID": "12D3KooWPk6kN64HgKPxEkCPojRt94Kt8PRoKgmkHmg4gM5Gi7jY",
+    "Addrs": [
+      "/ip4/18.192.214.216"
+    ]
   }
   
 ]

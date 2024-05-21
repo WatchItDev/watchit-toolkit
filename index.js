@@ -106,6 +106,7 @@ async function* imageProcessing(input, output) {
 }
 
 const cidCollections = {};
+const processed = new Set()
 
 function* recursivePaths(inputPath) {
   const paths = fs.readdirSync(inputPath, { withFileTypes: true });
@@ -117,7 +118,9 @@ function* recursivePaths(inputPath) {
       if ([".mp4", "image.jpg", ".json"].some((i) => input.name.includes(i))) {
         const root = input.path.replace(ROOT_PATH, "").split(path.sep);
         const imdb = root.shift();
-        if (Object.keys(cidCollections).length > 10) return;
+        processed.add(imdb)
+        // if (Object.keys(cidCollections).length > 10) return;
+        if (processed.size <= 10) continue;
         yield {
           imdb,
           path: resultingPath,
