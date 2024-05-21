@@ -2,11 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
-import { create, globSource } from 'kubo-rpc-client'
+import { create, globSource } from "kubo-rpc-client";
 import { ffprobe } from "./introspection.js";
 import { hls } from "./processing.js";
 
-const node = await create()
+const node = await create();
 const ROOT_PATH = "/media/gmena/bigexternal/raw/";
 const CONVERTED_PATH = ROOT_PATH.replace("raw", "encoded");
 
@@ -117,7 +117,7 @@ function* recursivePaths(inputPath) {
       if ([".mp4", "image.jpg", ".json"].some((i) => input.name.includes(i))) {
         const root = input.path.replace(ROOT_PATH, "").split(path.sep);
         const imdb = root.shift();
-        if (!["tt0003758", "tt0000417"].includes(imdb)) return;
+        if (Object.keys(cidCollections).length > 10) return;
         yield {
           imdb,
           path: resultingPath,
@@ -170,9 +170,7 @@ try {
       const jsonObject = JSON.parse(jsonData);
 
       jsonObject["id"] = jsonObject["imdb_code"];
-      jsonObject[
-        "trailerUrl"
-      ] = `https://www.youtube.com/watch?v=${jsonObject["trailer_code"]}`;
+      jsonObject["trailerUrl"] = jsonObject["trailer_code"];
       jsonObject["genesisDate"] = jsonObject["date_uploaded_unix"];
 
       delete jsonObject["trailer_code"];
@@ -203,7 +201,6 @@ try {
 
   console.log(manifestCid.cid.toString());
   fs.writeFileSync("manifest.json", JSON.stringify(manifest));
-  
-} catch {
-
+} catch (e) {
+  console.log(e);
 }
