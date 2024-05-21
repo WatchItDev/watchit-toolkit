@@ -5,7 +5,7 @@ peers=$(cat peers.json)
 mounts=$(cat mount.json)
 
 sudo sysctl -w net.core.wmem_max=7500000
-export IPFS_PATH=${1:-/ipfsdata}
+export IPFS_PATH=${1:-~/ipfsdata}
 
 if ! command -v -- "ipfs" >/dev/null; then
        echo "Intalling ipfs"
@@ -21,10 +21,8 @@ if ! -f ${IPFS_PATH}/plugins/go-ds-s3-plugin; then
        echo "Intalling S3 datasource"
        wget https://github.com/ipfs/go-ds-s3/releases/download/go-ds-s3-plugin%2Fv0.28.0/go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
        tar -xvzf go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
-       mkdir ${IPFS_PATH}/plugins
+       mkdir -p ${IPFS_PATH}/plugins
        cp go-ds-s3-plugin/go-ds-s3-plugin ${IPFS_PATH}/plugins
-
-
 fi
 
 echo "Running ipfs in ${IPFS_PATH}"
