@@ -1,10 +1,9 @@
 #!/bin/bash
 # get my public ip
-ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 peers=$(cat peers.json)
 mounts=$(cat s3.json)
 
-PROFILE=${2:default}
+export IPFS_PROFILE=${2:local}
 export IPFS_PATH=${1:-~/.ipfs}
 
 if ! command -v -- "ipfs" >/dev/null; then
@@ -28,21 +27,11 @@ fi
 echo "Running ipfs in ${IPFS_PATH}"
 [ ! -e $IPFS_PATH ] && ipfs init --empty-repo
 
-
 # shellcheck disable=SC2006
 # http://docs.ipfs.tech.ipns.localhost:8080/how-to/peering-with-content-providers/#content-provider-list
 ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
-
-
-# # shellcheck disable=SC2016
-ipfs config Addresses.AppendAnnounce "[
-       \"/ip4/$ip/tcp/4001\",
-       \"/ip4/$ip/udp/4001/quic\",
-       \"/ip4/$ip/udp/4001/quic-v1\",
-       \"/ip4/$ip/udp/4001/quic-v1/webtransport\"
-]" --json
 
 ipfs config Swarm.ConnMgr.LowWater 30 --json
 ipfs config Swarm.ConnMgr.HighWater 50 --json
@@ -61,7 +50,18 @@ ipfs config Swarm.AddrFilters '[
        "/ip6/fe80::/ipcidr/10"
 ]' --json
 
-if [ "$PROFILE" = "server" ]; then
+if [ "$IPFS_PROFILE" = "local" ]; then
+       echo "Running ipfs in local mode"
+       ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
+       ipfs config Addresses.AppendAnnounce "[
+              \"/ip4/$ip/tcp/4001\",
+              \"/ip4/$ip/udp/4001/quic\",
+              \"/ip4/$ip/udp/4001/quic-v1\",
+              \"/ip4/$ip/udp/4001/quic-v1/webtransport\"
+       ]" --json
+fi
+
+if [ "$IPFS_PROFILE" = "server" ]; then
        echo "Running ipfs in server mode"
        ipfs config profile apply server
        ipfs config Datastore.Spec.mounts "$mounts" --json
