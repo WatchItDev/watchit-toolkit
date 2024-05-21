@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # get my public ip
 ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 peers=$(cat peers.json)
@@ -27,7 +27,7 @@ fi
 echo "Running ipfs in ${IPFS_PATH}"
 [ ! -e $IPFS_PATH ] && ipfs init --empty-repo
 
-if [ $2 == "server" ]; then
+if [ "$2" = "server" ]; then
        echo "Running ipfs in server mode"
        ipfs config profile apply server
        ipfs config Datastore.Spec.mounts "$mounts" --json
