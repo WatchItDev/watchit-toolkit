@@ -15,7 +15,9 @@ if ! command -v -- "ipfs" >/dev/null; then
        cd kubo
        bash install.sh
        ipfs --version
+fi
 
+if ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin/; then
        echo "Intalling S3 datasource"
        wget https://github.com/ipfs/go-ds-s3/releases/download/go-ds-s3-plugin%2Fv0.28.0/go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
        tar -xvzf go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
