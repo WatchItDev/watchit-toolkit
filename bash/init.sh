@@ -4,8 +4,12 @@ ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 peers=$(cat peers.json)
 mounts=$(cat s3.json)
 
+PROFILE=${2:default}
 export IPFS_PATH=${1:-~/.ipfs}
 
+
+echo $IPFS_PATH
+echo $PROFILE
 if ! command -v -- "ipfs" >/dev/null; then
        echo "Intalling ipfs"
        wget https://dist.ipfs.tech/kubo/v0.28.0/kubo_v0.28.0_linux-amd64.tar.gz
@@ -27,7 +31,7 @@ fi
 echo "Running ipfs in ${IPFS_PATH}"
 [ ! -e $IPFS_PATH ] && ipfs init --empty-repo
 
-if [ "$2" = "server" ]; then
+if [ "$PROFILE" = "server" ]; then
        echo "Running ipfs in server mode"
        ipfs config profile apply server
        ipfs config Datastore.Spec.mounts "$mounts" --json
