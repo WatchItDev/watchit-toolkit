@@ -4,7 +4,7 @@ ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 peers=$(cat peers.json)
 mounts=$(cat s3.json)
 
-export IPFS_PATH=${1:-~/ipfsdata}
+export IPFS_PATH=${1:-~/.ipfs}
 
 if ! command -v -- "ipfs" >/dev/null; then
        echo "Intalling ipfs"
