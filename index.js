@@ -40,26 +40,32 @@ const images = {
 
 const representation = {
   // [[width, height], [video kb bitrate, audiokb  bitrate]]
-  480: [
-    [854, 480],
-    [750, 192],
-  ],
-  720: [
-    [1280, 720],
-    [2048, 320],
-  ],
-  1080: [
-    [1920, 1080],
-    [4096, 320],
-  ],
-  2560: [
-    [2560, 1440],
-    [6144, 320],
-  ],
-  3840: [
-    [3840, 2160],
-    [17408, 320],
-  ],
+  480: { width: 854, height: 480, vb: 750, ab: 128, name: "480p", fps: 30 },
+  720: { width: 1280, height: 720, vb: 2048, ab: 128, name: "720p", fps: 30 },
+  1080: {
+    width: 1920,
+    height: 1080,
+    vb: 4096,
+    ab: 128,
+    name: "1080p",
+    fps: 30,
+  },
+  2560: {
+    width: 2560,
+    height: 1440,
+    vb: 6144,
+    ab: 128,
+    name: "1440p",
+    fps: 60,
+  },
+  3840: {
+    width: 3840,
+    height: 2160,
+    vb: 17408,
+    ab: 192,
+    name: "2160p",
+    fps: 60,
+  },
 };
 
 async function videoProcessing(input, output) {
@@ -71,6 +77,7 @@ async function videoProcessing(input, output) {
     return Promise.resolve(outputDir);
   }
 
+  fs.mkdirSync(outputDir, { recursive: true });
   const videoData = await ffprobe({
     input,
   }).catch((err) => {
@@ -106,7 +113,7 @@ async function* imageProcessing(input, output) {
 }
 
 const cidCollections = {};
-const processed = new Set()
+const processed = new Set();
 
 function* recursivePaths(inputPath) {
   const paths = fs.readdirSync(inputPath, { withFileTypes: true });
@@ -118,8 +125,8 @@ function* recursivePaths(inputPath) {
       if ([".mp4", "image.jpg", ".json"].some((i) => input.name.includes(i))) {
         const root = input.path.replace(ROOT_PATH, "").split(path.sep);
         const imdb = root.shift();
-        processed.add(imdb)
-        // if (Object.keys(cidCollections).length > 10) return;
+        processed.add(imdb);
+         if (Object.keys(cidCollections).length > 10) return;
         if (processed.size <= 10) continue;
         yield {
           imdb,
@@ -134,6 +141,7 @@ try {
   for (const dir of recursivePaths(ROOT_PATH)) {
     const { imdb, path: input } = dir;
     const output = path.join(CONVERTED_PATH, imdb);
+    
 
     if (!(imdb in cidCollections)) {
       cidCollections[imdb] = {

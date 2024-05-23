@@ -1,2 +1,4 @@
 node_modules/
 bash/light.pem
+manifest.json
+pdm.txt
