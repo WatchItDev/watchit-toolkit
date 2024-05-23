@@ -2,6 +2,7 @@
 # get my public ip
 peers=$(cat peers.json)
 mounts=$(cat s3.json)
+user=$(whoami)
 
 export IPFS_PROFILE=${2:local}
 export IPFS_PATH=${1:-~/.ipfs}
@@ -11,8 +12,9 @@ if ! command -v -- "ipfs" >/dev/null; then
        wget https://dist.ipfs.tech/kubo/v0.28.0/kubo_v0.28.0_linux-amd64.tar.gz
        tar -xvzf kubo_v0.28.0_linux-amd64.tar.gz
 
-       cd kubo
-       bash install.sh
+       cd kubo 
+        # we need sudo to move the file to /usr/local/bin otherwise is copied to home/.local
+       sudo bash install.sh
        ipfs --version
 fi
 
@@ -72,3 +74,24 @@ ipfs config Datastore.StorageMax "3000GB"
 ipfs config Datastore.StorageGCWatermark 99 --json
 ipfs config Pubsub.Router "gossipsub"
 ipfs config --json Swarm.DisableBandwidthMetrics false
+
+echo "
+[Unit]
+Description=IPFS Daemon
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ipfs daemon --enable-namesys-pubsub
+User=$user
+
+[Install]
+WantedBy=multi-user.target
+" >  ipfs.service
+
+
+sudo cp ./ipfs.service /etc/systemd/system/ipfs.service
+sudo systemctl daemon-reload
+sudo systemctl enable ipfs
+sudo systemctl start ipfs
+sudo systemctl status ipfs
