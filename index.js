@@ -70,9 +70,9 @@ const representation = {
 
 async function videoProcessing(input, output) {
   const outputDir = path.join(output, "hls");
-  const expectIndexFile = path.join(outputDir, "index.m3u8");
+  const lockFile = path.join(output, 'lock');
 
-  if (fs.existsSync(expectIndexFile)) {
+  if (fs.existsSync(lockFile)) {
     console.log(`Omiting existing`);
     return Promise.resolve(outputDir);
   }
@@ -97,6 +97,9 @@ async function videoProcessing(input, output) {
     representations: allowed,
   });
 
+  // touch file
+  const fd = fs.openSync(lockFile, 'w')
+  fs.closeSync(fd);
   return outputDir;
 }
 
@@ -125,9 +128,10 @@ function* recursivePaths(inputPath) {
       if ([".mp4", "image.jpg", ".json"].some((i) => input.name.includes(i))) {
         const root = input.path.replace(ROOT_PATH, "").split(path.sep);
         const imdb = root.shift();
-        processed.add(imdb);
-         if (Object.keys(cidCollections).length > 10) return;
-        if (processed.size <= 10) continue;
+        // processed.add(imdb);
+        // if (processed.size > 12) return false;
+
+
         yield {
           imdb,
           path: resultingPath,
@@ -141,7 +145,6 @@ try {
   for (const dir of recursivePaths(ROOT_PATH)) {
     const { imdb, path: input } = dir;
     const output = path.join(CONVERTED_PATH, imdb);
-    
 
     if (!(imdb in cidCollections)) {
       cidCollections[imdb] = {
@@ -208,6 +211,7 @@ try {
   const bytes = JSON.stringify(manifest);
   const manifestCid = await node.add(bytes, {
     cidVersion: 1,
+    pin: true
   });
 
   console.log(manifestCid.cid.toString());

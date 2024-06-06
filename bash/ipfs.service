@@ -5,7 +5,7 @@ After=syslog.target network.target remote-fs.target nss-lookup.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/ipfs daemon --enable-namesys-pubsub
+ExecStart=/usr/local/bin/ipfs daemon --enable-namesys-pubsub --migrate
 User=gmena
 
 [Install]

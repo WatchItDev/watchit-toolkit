@@ -2,7 +2,6 @@
 # get my public ip
 peers=$(cat peers.json)
 mounts=$(cat s3.json)
-user=$(whoami)
 
 export IPFS_PROFILE=${2:local}
 export IPFS_PATH=${1:-~/.ipfs}
@@ -37,6 +36,16 @@ ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
 
 ipfs config Swarm.ConnMgr.LowWater 30 --json
 ipfs config Swarm.ConnMgr.HighWater 50 --json
+
+ipfs config Addresses.Swarm '[
+       "/ip4/0.0.0.0/tcp/4001",
+       "/ip6/::/tcp/4001",
+       "/ip4/0.0.0.0/tcp/0/ws",
+       "/ip4/0.0.0.0/udp/4001/quic-v1",
+       "/ip4/0.0.0.0/udp/4001/quic-v1/webtransport",
+       "/ip6/::/udp/4001/quic-v1",
+       "/ip6/::/udp/4001/quic-v1/webtransport"
+]' --json
 
 ipfs config Swarm.AddrFilters '[
        "/ip4/100.64.0.0/ipcidr/10",
@@ -74,24 +83,3 @@ ipfs config Datastore.StorageMax "3000GB"
 ipfs config Datastore.StorageGCWatermark 99 --json
 ipfs config Pubsub.Router "gossipsub"
 ipfs config --json Swarm.DisableBandwidthMetrics false
-
-echo "
-[Unit]
-Description=IPFS Daemon
-After=syslog.target network.target remote-fs.target nss-lookup.target
-
-[Service]
-Type=simple
-ExecStart=/usr/local/bin/ipfs daemon --enable-namesys-pubsub
-User=$user
-
-[Install]
-WantedBy=multi-user.target
-" >  ipfs.service
-
-
-sudo cp ./ipfs.service /etc/systemd/system/ipfs.service
-sudo systemctl daemon-reload
-sudo systemctl enable ipfs
-sudo systemctl start ipfs
-sudo systemctl status ipfs
