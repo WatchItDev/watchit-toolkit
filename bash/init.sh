@@ -33,10 +33,9 @@ echo "Running ipfs in ${IPFS_PATH}"
 ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
-ipfs config --bool Swarm.RelayService.Enabled true
-ipfs config --bool Swarm.EnableAutoNATService true
-ipfs config --bool Swarm.RelayClient.Enabled true
 
+ipfs config Swarm.Transports.Network.Websocket --json true
+ipfs config Swarm.Transports.Network.WebTransport --json true
 ipfs config Swarm.Transports.Network.WebRTCDirect --json true
 ipfs config Swarm.ConnMgr.LowWater 30 --json
 ipfs config Swarm.ConnMgr.HighWater 50 --json
@@ -48,7 +47,7 @@ ipfs config Addresses.Swarm '[
        "/ip4/0.0.0.0/udp/4001/quic-v1",
        "/ip4/0.0.0.0/udp/4001/quic-v1/webtransport",
        "/ip6/::/udp/4001/quic-v1",
-       "/ip4/0.0.0.0/udp/4001/webrtc-direct",
+       "/ip4/0.0.0.0/udp/4002/webrtc-direct",
        "/ip6/::/udp/4001/quic-v1/webtransport"
 ]' --json
 
@@ -75,11 +74,13 @@ if [ "$IPFS_PROFILE" = "local" ]; then
               \"/ip4/$ip/udp/4001/quic-v1\",
               \"/ip4/$ip/udp/4001/quic-v1/webtransport\"
        ]" --json
+       ipfs config --bool Swarm.RelayClient.Enabled true
 fi
 
 if [ "$IPFS_PROFILE" = "server" ]; then
        echo "Running ipfs in server mode"
        ipfs config profile apply server
+       ipfs config --bool Swarm.RelayService.Enabled true
        ipfs config Datastore.Spec.mounts "$mounts" --json
 fi
 
