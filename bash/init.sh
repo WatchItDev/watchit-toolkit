@@ -34,6 +34,10 @@ ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
 
+ipfs config --json Routing.AcceleratedDHTClient true
+ipfs config --json Experimental.FilestoreEnabled true
+ipfs config --json Experimental.UrlstoreEnabled false
+
 ipfs config Swarm.Transports.Network.Websocket --json true
 ipfs config Swarm.Transports.Network.WebTransport --json true
 ipfs config Swarm.Transports.Network.WebRTCDirect --json true
@@ -75,6 +79,7 @@ if [ "$IPFS_PROFILE" = "local" ]; then
               \"/ip4/$ip/udp/4001/quic-v1/webtransport\"
        ]" --json
        ipfs config --bool Swarm.RelayClient.Enabled true
+       
 fi
 
 if [ "$IPFS_PROFILE" = "server" ]; then
@@ -83,6 +88,11 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config --bool Swarm.RelayService.Enabled true
        ipfs config Datastore.Spec.mounts "$mounts" --json
 fi
+
+# https://github.com/nextcloud/all-in-one/discussions/1970
+echo "net.core.rmem_max = 2500000" | sudo tee /etc/sysctl.d/ipfs.conf
+sudo sysctl "net.core.rmem_max=2500000"
+sudo sysctl -p
 
 ipfs config Datastore.GCPeriod "144h"
 ipfs config Datastore.StorageMax "3000GB"

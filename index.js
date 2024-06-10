@@ -129,7 +129,7 @@ function* recursivePaths(inputPath) {
         const root = input.path.replace(ROOT_PATH, "").split(path.sep);
         const imdb = root.shift();
         // processed.add(imdb);
-        // if (processed.size > 12) return false;
+        // if (processed.size > 40) return false;
 
 
         yield {
