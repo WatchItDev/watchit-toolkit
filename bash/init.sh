@@ -51,7 +51,7 @@ ipfs config Addresses.Swarm '[
        "/ip4/0.0.0.0/udp/4001/quic-v1",
        "/ip4/0.0.0.0/udp/4001/quic-v1/webtransport",
        "/ip6/::/udp/4001/quic-v1",
-       "/ip4/0.0.0.0/udp/4002/webrtc-direct",
+      
        "/ip6/::/udp/4001/quic-v1/webtransport"
 ]' --json
 
@@ -60,7 +60,7 @@ ipfs config Addresses.AppendAnnounce "[
        \"/ip4/$ip/udp/4001/quic\",
        \"/ip4/$ip/udp/4001/quic-v1\",
        \"/ip4/$ip/udp/4001/quic-v1/webtransport\",
-       \"/ip4/$ip/udp/4002/webrtc-direct\"
+
 ]" --json
 
 ipfs config Swarm.AddrFilters '[
