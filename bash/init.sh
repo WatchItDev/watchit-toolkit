@@ -5,6 +5,7 @@ mounts=$(cat s3.json)
 
 export IPFS_PROFILE=${2:local}
 export IPFS_PATH=${1:-~/.ipfs}
+ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 
 if ! command -v -- "ipfs" >/dev/null; then
        echo "Intalling ipfs"
@@ -34,7 +35,6 @@ ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
 
-ipfs config --json Routing.AcceleratedDHTClient true
 ipfs config --json Experimental.FilestoreEnabled true
 ipfs config --json Experimental.UrlstoreEnabled false
 
@@ -55,6 +55,14 @@ ipfs config Addresses.Swarm '[
        "/ip6/::/udp/4001/quic-v1/webtransport"
 ]' --json
 
+ipfs config Addresses.AppendAnnounce "[
+       \"/ip4/$ip/tcp/4001\",
+       \"/ip4/$ip/udp/4001/quic\",
+       \"/ip4/$ip/udp/4001/quic-v1\",
+       \"/ip4/$ip/udp/4001/quic-v1/webtransport\",
+       \"/ip4/$ip/udp/4002/webrtc-direct\"
+]" --json
+
 ipfs config Swarm.AddrFilters '[
        "/ip4/100.64.0.0/ipcidr/10",
        "/ip4/169.254.0.0/ipcidr/16",
@@ -71,15 +79,8 @@ ipfs config Swarm.AddrFilters '[
 
 if [ "$IPFS_PROFILE" = "local" ]; then
        echo "Running ipfs in local mode"
-       ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
-       ipfs config Addresses.AppendAnnounce "[
-              \"/ip4/$ip/tcp/4001\",
-              \"/ip4/$ip/udp/4001/quic\",
-              \"/ip4/$ip/udp/4001/quic-v1\",
-              \"/ip4/$ip/udp/4001/quic-v1/webtransport\"
-       ]" --json
        ipfs config --bool Swarm.RelayClient.Enabled true
-       
+       ipfs config --json Routing.AcceleratedDHTClient false
 fi
 
 if [ "$IPFS_PROFILE" = "server" ]; then
