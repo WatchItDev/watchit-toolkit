@@ -16,6 +16,7 @@ if ! command -v -- "ipfs" >/dev/null; then
         # we need sudo to move the file to /usr/local/bin otherwise is copied to home/.local
        sudo bash install.sh
        ipfs --version
+       ipfs init --empty-repo
 fi
 
 if [ ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ]; then
@@ -27,8 +28,6 @@ if [ ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ]; then
 fi
 
 echo "Running ipfs in ${IPFS_PATH}"
-[ ! -e $IPFS_PATH ] && ipfs init --empty-repo
-
 # shellcheck disable=SC2006
 # http://docs.ipfs.tech.ipns.localhost:8080/how-to/peering-with-content-providers/#content-provider-list
 ipfs config Peering.Peers "$peers" --json
