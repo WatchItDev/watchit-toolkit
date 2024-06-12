@@ -39,7 +39,7 @@ ipfs config --json Experimental.UrlstoreEnabled false
 
 ipfs config Swarm.Transports.Network.Websocket --json true
 ipfs config Swarm.Transports.Network.WebTransport --json true
-ipfs config Swarm.Transports.Network.WebRTCDirect --json true
+ipfs config Swarm.Transports.Network.WebRTCDirect --json false
 ipfs config Swarm.ConnMgr.LowWater 30 --json
 ipfs config Swarm.ConnMgr.HighWater 50 --json
 
