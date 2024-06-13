@@ -1,5 +1,6 @@
 {
 	email info@watchit.movie
+    debug
 }
 
 
@@ -13,7 +14,11 @@
 
 
 gw.watchit.movie /ipfs/* {
-    reverse_proxy  http://locahost:8080
+
+    @get  {
+        method GET
+    }
+    reverse_proxy @get locahost:8080
     import logging
     encode gzip
 
