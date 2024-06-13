@@ -38,7 +38,7 @@ ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
 
-ipfs config --json Import.CidVersion 1
+ipfs config --json Import.CidVersion '1'
 ipfs config --json Experimental.FilestoreEnabled true
 ipfs config --json Experimental.UrlstoreEnabled false
 
