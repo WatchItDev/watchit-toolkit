@@ -93,7 +93,7 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config Gateway.PublicGateways '{
               "gw.watchit.movie": {
                      "UseSubdomains": true,
-                     "Paths": ["/ipfs"]
+                     "Paths": ["/ipfs", "/ipns"]
               }
        }' --json
 fi
