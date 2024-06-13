@@ -4,16 +4,8 @@
     debug
 }
 
-(shared_conf) {
-    encode zstd gzip
-
-	log {
-		output stdout
-    }
-}
 
 gw.watchit.movie {
-    // import shared_conf
     tls /etc/caddy/cert.pem /etc/caddy/key.pem
     reverse_proxy :8080   
     
