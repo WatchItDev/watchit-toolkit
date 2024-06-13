@@ -3,12 +3,6 @@
 }
 
 
-(cors) {
-	header Origin {
-		Access-Control-Allow-Origin "{args.0}"
-		Access-Control-Request-Method GET
-	}
-}
 
 (logging) {
 	log {
@@ -19,8 +13,13 @@
 
 
 gw.watchit.movie {
-    encode gzip
-    import logging
-    import cors "app.watchit.movie"
     reverse_proxy /ipfs/* http://locahost:8080
+    import logging
+    encode gzip
+    header Origin {
+        Access-Control-Allow-Origin "app.watchit.movie"
+		Access-Control-Request-Method GET
+	}
+
+    
 }
