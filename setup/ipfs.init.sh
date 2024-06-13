@@ -92,10 +92,10 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config Datastore.Spec.mounts "$mounts" --json
        ipfs config Gateway.PublicGateways '{
               "gw.watchit.movie": {
-                "UseSubdomains": true,
-                "Paths": ["/ipfs"]
-		}
-	}' --json
+                     "UseSubdomains": true,
+                     "Paths": ["/ipfs"]
+              }
+       }'
 fi
 
 # https://github.com/nextcloud/all-in-one/discussions/1970
