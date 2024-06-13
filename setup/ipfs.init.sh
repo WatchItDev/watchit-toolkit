@@ -95,7 +95,7 @@ if [ "$IPFS_PROFILE" = "server" ]; then
                      "UseSubdomains": true,
                      "Paths": ["/ipfs"]
               }
-       }'
+       }' --json
 fi
 
 # https://github.com/nextcloud/all-in-one/discussions/1970
