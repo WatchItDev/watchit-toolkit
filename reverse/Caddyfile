@@ -7,7 +7,6 @@
 
 
 (shared_conf) {
-    tls internal
     encode zstd gzip
 
 	log {
@@ -19,6 +18,6 @@
 gw.watchit.movie {
     import shared_conf
     tls /etc/caddy/cert.pem /etc/caddy/key.pem
-    reverse_proxy  http://localhost:8080   
+    reverse_proxy  http://127.0.0.1:8080   
     
 }
