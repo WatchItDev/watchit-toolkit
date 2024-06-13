@@ -28,7 +28,7 @@ if [ ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ]; then
 fi
 
 echo "Running ipfs in ${IPFS_PATH}"
-if [ ! -e "${IPFS_PATH}/config" ]; then
+if [ ! -e ${IPFS_PATH}/config ]; then
        ipfs init --empty-repo
 fi
 
