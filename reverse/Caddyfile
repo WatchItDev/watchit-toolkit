@@ -13,7 +13,7 @@
 
 
 gw.watchit.movie /ipfs/* {
-    reverse_proxy  http://locahost:8080/
+    reverse_proxy  http://locahost:8080
     import logging
     encode gzip
 
