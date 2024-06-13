@@ -1,0 +1,27 @@
+{
+	email info@watchit.movie
+}
+
+
+(cors) {
+	header Origin {
+		Access-Control-Allow-Origin "{args.0}"
+		Access-Control-Request-Method GET
+	}
+}
+
+(logging) {
+	log {
+		output file /var/log/caddy.log
+		format json
+	}
+}
+
+
+gw.watchit.movie {
+    cache
+    encode gzip
+    import logging
+    import cors "app.watchit.movie"
+    reverse_proxy /ipfs/* http://locahost:8080
+}
