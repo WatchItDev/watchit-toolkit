@@ -95,14 +95,14 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config Gateway.NoFetch false --bool
        ipfs config Gateway.NoDNSLink false --bool
        ipfs config Gateway.DeserializedResponses true --bool
-       ipfs config Gateway.PublicGateways '{}' --json
-
-       ipfs config Gateway.HTTPHeaders '{
-            "Access-Control-Allow-Origin": ["*"],
-            "Access-Control-Allow-Methods": ["GET"],
-            "Access-Control-Allow-Headers": ["Authorization"],
-            "Access-Control-Allow-Credentials": ["true"]
+       ipfs config Gateway.HTTPHeaders '{}' --json
+       ipfs config Gateway.PublicGateways '{
+              "watchit.movie": {
+                     "UseSubdomains": true,
+                     "Paths": ["/ipfs", "/ipns"]
+              }
        }' --json
+
 fi
 
 # https://github.com/nextcloud/all-in-one/discussions/1970
