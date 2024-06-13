@@ -16,7 +16,7 @@
 }
 
 
-ipfs.watchit.movie {
+*.watchit.movie {
     import shared_conf
     reverse_proxy  :8080   
     
