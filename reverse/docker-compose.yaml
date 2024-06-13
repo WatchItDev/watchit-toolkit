@@ -12,6 +12,7 @@ services:
       - ./key.pem:/etc/caddy/key.pem
       - caddy_data:/data
       - caddy_config:/config
+    network_mode: host
 
 volumes:
   caddy_data:

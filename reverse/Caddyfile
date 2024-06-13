@@ -8,5 +8,4 @@
 gw.watchit.movie {
     tls /etc/caddy/cert.pem /etc/caddy/key.pem
     reverse_proxy :8080   
-    
 }
