@@ -62,7 +62,7 @@ ipfs config Addresses.AppendAnnounce "[
        \"/ip4/$ip/tcp/4001\",
        \"/ip4/$ip/udp/4001/quic\",
        \"/ip4/$ip/udp/4001/quic-v1\",
-       \"/ip4/$ip/udp/4001/quic-v1/webtransport\",
+       \"/ip4/$ip/udp/4001/quic-v1/webtransport\"
 ]" --json
 
 ipfs config Swarm.AddrFilters '[
