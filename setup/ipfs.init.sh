@@ -91,7 +91,7 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config --bool Swarm.RelayService.Enabled true
        ipfs config Datastore.Spec.mounts "$mounts" --json
        ipfs config Gateway.DeserializedResponses true --bool
-       ipfs config Gateway.HTTPHeaders {} --json
+       ipfs config Gateway.HTTPHeaders '{}' --json
        ipfs config Gateway.RootRedirect "" --json
        ipfs config Gateway.NoFetch false --bool
        ipfs config Gateway.NoDNSLink false --bool
