@@ -19,7 +19,6 @@
 
 
 gw.watchit.movie {
-    cache
     encode gzip
     import logging
     import cors "app.watchit.movie"
