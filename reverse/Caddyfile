@@ -16,7 +16,7 @@
 }
 
 
-gw.watchit.movie / {
+watchit.movie / {
     import shared_conf
     
     header {
