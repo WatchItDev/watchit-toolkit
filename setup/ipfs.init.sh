@@ -19,7 +19,7 @@ if ! command -v -- "ipfs" >/dev/null; then
       
 fi
 
-if ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ; then
+if [ ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ]; then
        echo "Intalling S3 datasource"
        wget https://github.com/ipfs/go-ds-s3/releases/download/go-ds-s3-plugin%2Fv0.28.0/go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
        tar -xvzf go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
@@ -28,7 +28,7 @@ if ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ; then
 fi
 
 echo "Running ipfs in ${IPFS_PATH}"
-if ! -e ${IPFS_PATH}/config ; then
+if [ ! -e ${IPFS_PATH}/config ]; then
        ipfs init --empty-repo
 fi
 
