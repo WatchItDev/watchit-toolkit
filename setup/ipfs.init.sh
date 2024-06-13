@@ -90,6 +90,12 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config profile apply server
        ipfs config --bool Swarm.RelayService.Enabled true
        ipfs config Datastore.Spec.mounts "$mounts" --json
+       ipfs config Gateway.DeserializedResponses trye --bool
+       ipfs config Gateway/HTTPHeaders {} --json
+       ipfs config Gateway.RootRedirect "" --json
+       ipfs config Gateway.NoFetch false --bool
+       ipfs config Gateway.NoDNSLink false --bool
+       ipfs config Gateway.DeserializedResponses true --bool
        ipfs config Gateway.PublicGateways '{
               "gw.watchit.movie": {
                      "UseSubdomains": true,
