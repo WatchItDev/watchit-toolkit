@@ -16,7 +16,7 @@
 }
 
 
-*.watchit.movie {
+gw.watchit.movie {
     import shared_conf
     tls /etc/caddy/cert.pem /etc/caddy/key.pem
     reverse_proxy  http://localhost:8080   

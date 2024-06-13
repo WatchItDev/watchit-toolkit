@@ -97,7 +97,7 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config Gateway.NoDNSLink false --bool
        ipfs config Gateway.DeserializedResponses true --bool
        ipfs config Gateway.PublicGateways '{
-              "watchit.movie": {
+              "gw.watchit.movie": {
                      "UseSubdomains": true,
                      "Paths": ["/ipfs", "/ipns"]
               }
