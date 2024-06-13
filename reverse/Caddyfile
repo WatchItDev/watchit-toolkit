@@ -13,7 +13,13 @@
 }
 
 
-gw.watchit.movie {
+gw.watchit.movie / {
+
+    respond "Welcome to watchit"
+    
+}
+
+gw.watchit.movie /ipfs/* {
 
     @get  {
         method GET
@@ -21,15 +27,6 @@ gw.watchit.movie {
     
     import logging
     encode gzip
-
-    handle_path /ipfs/* {
-        reverse_proxy @get locahost:8080
-    }
-
-    handle_path {
-        respond "Welcome to watchit gateway"
-    }
-
-
+    reverse_proxy @get locahost:8080
     
 }
