@@ -1,10 +1,8 @@
 # On Cloudflare, go to Crypto -> SSL and set it to Full or Full(strict)
-
 {
 	email info@watchit.movie
     debug
 }
-
 
 (shared_conf) {
     encode zstd gzip
@@ -14,10 +12,9 @@
     }
 }
 
-
-gw.watchit.movie {
+ipfs.watchit.movie {
     import shared_conf
     tls /etc/caddy/cert.pem /etc/caddy/key.pem
-    reverse_proxy  http://127.0.0.1:8080   
+    reverse_proxy  :8080   
     
 }

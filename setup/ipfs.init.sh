@@ -91,16 +91,17 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config --bool Swarm.RelayService.Enabled true
        ipfs config Datastore.Spec.mounts "$mounts" --json
        ipfs config Gateway.DeserializedResponses true --bool
-       ipfs config Gateway.HTTPHeaders '{}' --json
        ipfs config Gateway.RootRedirect "" 
        ipfs config Gateway.NoFetch false --bool
        ipfs config Gateway.NoDNSLink false --bool
        ipfs config Gateway.DeserializedResponses true --bool
-       ipfs config Gateway.PublicGateways '{
-              "gw.watchit.movie": {
-                     "UseSubdomains": true,
-                     "Paths": ["/ipfs", "/ipns"]
-              }
+       ipfs config Gateway.PublicGateways '{}' --json
+
+       ipfs config Gateway.HTTPHeaders '{
+            "Access-Control-Allow-Origin": ["*"],
+            "Access-Control-Allow-Methods": ["GET"],
+            "Access-Control-Allow-Headers": ["Authorization"],
+            "Access-Control-Allow-Credentials": ["true"]
        }' --json
 fi
 
