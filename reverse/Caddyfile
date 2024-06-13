@@ -1,36 +1,36 @@
 # On Cloudflare, go to Crypto -> SSL and set it to Full or Full(strict)
 {
-	email info@watchit.movie
+	email info @watchit.movie
     debug
 }
 
 
 (security_headers) {
-	header * {
+    header * {
 		# enable HSTS
 		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#strict-transport-security-hsts
-		Strict-Transport-Security "max-age=3600; includeSubDomains; preload"
+        Strict- Transport - Security "max-age=3600; includeSubDomains; preload"
 
 		# disable clients from sniffing the media type
 		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-content-type-options
-		X-Content-Type-Options "nosniff"
+    X - Content - Type - Options "nosniff"
 
 		# clickjacking protection
 		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-frame-options
-		X-Frame-Options "DENY"
+    X - Frame - Options "DENY"
 
 		# xss protection
 		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-xss-protection
-		X-XSS-Protection "1; mode=block"
+    X - XSS - Protection "1; mode=block"
 
-		# Remove -Server header, which is an information leak
+		# Remove - Server header, which is an information leak
 		# Remove Caddy from Headers
-		-Server
+        - Server
 
 		# keep referrer data off of HTTP connections
 		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#referrer-policy
-		Referrer-Policy strict-origin-when-cross-origin
-	}
+    Referrer - Policy strict - origin - when - cross - origin
+}
 }
 
 
@@ -48,12 +48,12 @@
 gw.watchit.movie  {
     import shared_conf
     
-    handle / {
-        respond "Welcome to watchit gateway"
-    }
+    proxy /ipfs/* locahost:8000 {
+        proxy_header Host {host}
+        proxy_header X-Real-IP {remote}
+        proxy_header X-Forwarded-Proto {scheme}
+        transparent
 
-    handle /ipfs/* {
-            
         header {
             Access-Control-Allow-Origin *
             Access-Control-Allow-Credentials true
@@ -62,10 +62,8 @@ gw.watchit.movie  {
             defer
         }
 
-        reverse_proxy localhost:8080 {
-            header_up Host {http.reverse_proxy.upstream.hostport}
-			header_up X-Forwarded-Proto {scheme}
-        }
-    }
+    }    
+    
+    
     
 }
