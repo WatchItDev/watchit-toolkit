@@ -1,3 +1,4 @@
+# On Cloudflare, go to Crypto -> SSL and set it to Full or Full(strict)
 {
 	email info@watchit.movie
     debug
@@ -44,11 +45,10 @@
 }
 
 
-
 gw.watchit.movie  {
     import shared_conf
     
-    handle {
+    handle / {
         respond "Welcome to watchit gateway"
     }
 
