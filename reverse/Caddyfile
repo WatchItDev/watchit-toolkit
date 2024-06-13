@@ -16,7 +16,6 @@ gw.watchit.movie /ipfs/* {
     reverse_proxy  http://locahost:8080
     import logging
     encode gzip
-    transparent
 
     header {
         Access-Control-Allow-Origin "*"
