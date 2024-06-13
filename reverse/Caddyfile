@@ -18,7 +18,6 @@
 
 ipfs.watchit.movie {
     import shared_conf
-    respond "hello world"
-    # import shared_conf
+    reverse_proxy  :8080   
     
 }
