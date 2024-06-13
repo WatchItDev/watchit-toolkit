@@ -49,18 +49,23 @@
 gw.watchit.movie  {
     import shared_conf
     
-    reverse_proxy /ipfs/* locahost:8000 {
-        header {
-            Host {host}
-            X-Real-IP {remote}
-            X-Forwarded-Proto {scheme}
-            Access-Control-Allow-Origin *
-            Access-Control-Allow-Credentials true
-            Access-Control-Allow-Methods *
-            Access-Control-Allow-Headers *
-            defer
-        }
+    header {
+        Host {host}
+        X-Real-IP {remote}
+        X-Forwarded-Proto {scheme}
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Credentials true
+        Access-Control-Allow-Methods *
+        Access-Control-Allow-Headers *
+        defer
+    }
 
-    }       
+    reverse_proxy /ipfs/* locahost:8000 {
+        header_up Host {http.reverse_proxy.upstream.hostport}
+        header_up X-Forwarded-Proto {scheme}
+    }
+        
+
+       
     
 }
