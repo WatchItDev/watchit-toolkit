@@ -98,7 +98,7 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config Gateway.HTTPHeaders '{}' --json
        ipfs config Gateway.PublicGateways '{
               "gw.watchit.movie": {
-                     "UseSubdomains": false,
+                     "UseSubdomains": true,
                      "Paths": ["/ipfs", "/ipns"]
               }
        }' --json
