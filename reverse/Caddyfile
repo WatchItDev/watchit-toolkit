@@ -30,7 +30,7 @@ gw.watchit.movie / {
         defer
     }
 
-    reverse_proxy  http://locahost:8000 {
+    reverse_proxy  :8080 {
         header_up Host {http.reverse_proxy.upstream.hostport}
         header_up X-Forwarded-Proto {scheme}
     }    
