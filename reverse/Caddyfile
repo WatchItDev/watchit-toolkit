@@ -46,7 +46,7 @@
 }
 
 
-gw.watchit.movie  {
+gw.watchit.movie /ipfs/* {
     import shared_conf
     
     header {
@@ -60,12 +60,9 @@ gw.watchit.movie  {
         defer
     }
 
-    reverse_proxy /ipfs/* locahost:8000 {
+    reverse_proxy  locahost:8000 {
         header_up Host {http.reverse_proxy.upstream.hostport}
         header_up X-Forwarded-Proto {scheme}
-    }
-        
-
-       
+    }    
     
 }
