@@ -4,6 +4,30 @@
     debug
 }
 
+(cors) {
+        @cors_preflight{args.0} method OPTIONS
+        @cors{args.0} header Origin {args.0}
+
+        handle @cors_preflight{args.0} {
+                header {
+                        Access-Control-Allow-Origin "{args.0}"
+                        Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                        Access-Control-Allow-Headers *
+                        Access-Control-Max-Age "3600"
+                        defer
+                }
+                respond "" 204
+        }
+
+        handle @cors{args.0} {
+                header {
+                        Access-Control-Allow-Origin "{args.0}"
+                        Access-Control-Expose-Headers *
+                        defer
+                }
+        }
+}
+
 
 (shared_conf) {
     encode zstd gzip
@@ -15,6 +39,7 @@
 
 gw.watchit.movie {
     import shared_conf
+    import cors *
     tls /etc/caddy/cert.pem /etc/caddy/key.pem
     reverse_proxy :8080   
     
