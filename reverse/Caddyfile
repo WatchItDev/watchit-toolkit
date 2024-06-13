@@ -48,12 +48,12 @@
 gw.watchit.movie  {
     import shared_conf
     
-
-    handle / {
+    handle {
         respond "Welcome to watchit gateway"
     }
 
-    handle /ipfs/* {    
+    handle /ipfs/* {
+            
         header {
             Access-Control-Allow-Origin *
             Access-Control-Allow-Credentials true
