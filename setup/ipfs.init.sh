@@ -16,7 +16,7 @@ if ! command -v -- "ipfs" >/dev/null; then
         # we need sudo to move the file to /usr/local/bin otherwise is copied to home/.local
        sudo bash install.sh
        ipfs --version
-       ipfs init --empty-repo
+      
 fi
 
 if [ ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ]; then
@@ -28,6 +28,10 @@ if [ ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ]; then
 fi
 
 echo "Running ipfs in ${IPFS_PATH}"
+if [ ! -e "${IPFS_PATH}/config" ]; then
+       ipfs init --empty-repo
+fi
+
 # shellcheck disable=SC2006
 # http://docs.ipfs.tech.ipns.localhost:8080/how-to/peering-with-content-providers/#content-provider-list
 ipfs config Peering.Peers "$peers" --json
@@ -86,6 +90,12 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        ipfs config profile apply server
        ipfs config --bool Swarm.RelayService.Enabled true
        ipfs config Datastore.Spec.mounts "$mounts" --json
+       ipfs config Gateway.PublicGateways '{
+              "gw.watchit.movie": {
+                "UseSubdomains": true,
+                "Paths": ["/ipfs"]
+		}
+	}' --json
 fi
 
 # https://github.com/nextcloud/all-in-one/discussions/1970

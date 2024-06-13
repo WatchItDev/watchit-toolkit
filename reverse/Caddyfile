@@ -6,37 +6,7 @@
 }
 
 
-(security_headers) {
-    header * {
-		# enable HSTS
-		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#strict-transport-security-hsts
-        Strict- Transport - Security "max-age=3600; includeSubDomains; preload"
-
-		# disable clients from sniffing the media type
-		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-content-type-options
-    X - Content - Type - Options "nosniff"
-
-		# clickjacking protection
-		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-frame-options
-    X - Frame - Options "DENY"
-
-		# xss protection
-		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-xss-protection
-    X - XSS - Protection "1; mode=block"
-
-		# Remove - Server header, which is an information leak
-		# Remove Caddy from Headers
-        - Server
-
-		# keep referrer data off of HTTP connections
-		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#referrer-policy
-    Referrer - Policy strict - origin - when - cross - origin
-}
-}
-
-
 (shared_conf) {
-    import security_headers
     tls internal
     encode zstd gzip
 
@@ -46,7 +16,7 @@
 }
 
 
-gw.watchit.movie /ipfs/* {
+gw.watchit.movie / {
     import shared_conf
     
     header {
@@ -60,7 +30,7 @@ gw.watchit.movie /ipfs/* {
         defer
     }
 
-    reverse_proxy  locahost:8000 {
+    reverse_proxy  http://locahost:8000 {
         header_up Host {http.reverse_proxy.upstream.hostport}
         header_up X-Forwarded-Proto {scheme}
     }    
