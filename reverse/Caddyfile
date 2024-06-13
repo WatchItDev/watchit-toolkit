@@ -12,11 +12,12 @@
 }
 
 
-gw.watchit.movie {
-    reverse_proxy /ipfs/* http://locahost:8080
+gw.watchit.movie /ipfs/* {
+    reverse_proxy  http://locahost:8080
     import logging
     encode gzip
-    header /ipfs/* {
+
+    header {
         Access-Control-Allow-Origin "app.watchit.movie"
 		Access-Control-Request-Method GET
 	}
