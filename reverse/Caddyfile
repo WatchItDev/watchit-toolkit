@@ -16,7 +16,7 @@
 }
 
 
-watchit.movie / {
+ipfs.watchit.movie / {
     import shared_conf
     
     header {
