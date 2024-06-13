@@ -1,32 +1,71 @@
 {
-	email info@watchit.movie
+	email info @watchit.movie
     debug
 }
 
 
+(security_headers) {
+	header * {
+		# enable HSTS
+		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#strict-transport-security-hsts
+		Strict-Transport-Security "max-age=3600; includeSubDomains; preload"
 
-(logging) {
-	log {
-		output file /var/log/caddy.log
-		format json
+		# disable clients from sniffing the media type
+		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-content-type-options
+		X-Content-Type-Options "nosniff"
+
+		# clickjacking protection
+		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-frame-options
+		X-Frame-Options "DENY"
+
+		# xss protection
+		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-xss-protection
+		X-XSS-Protection "1; mode=block"
+
+		# Remove -Server header, which is an information leak
+		# Remove Caddy from Headers
+		-Server
+
+		# keep referrer data off of HTTP connections
+		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#referrer-policy
+		Referrer-Policy strict-origin-when-cross-origin
 	}
 }
 
 
-gw.watchit.movie / {
+(shared_conf) {
+    import security_headers
+    tls internal
+    encode zstd gzip
 
-    respond "Welcome to watchit"
-    
+	log {
+		output stdout
+    }
 }
 
-gw.watchit.movie /ipfs/* {
 
-    @get  {
-        method GET
-    }
+
+gw.watchit.movie  {
+    import shared_conf
     
-    import logging
-    encode gzip
-    reverse_proxy @get locahost:8080
+
+    handle / {
+        respond "Welcome to watchit gateway"
+    }
+
+    handle / ipfs/* {    
+        header {
+            Access-Control-Allow-Origin *
+            Access-Control-Allow-Credentials true
+            Access-Control-Allow-Methods *
+            Access-Control-Allow-Headers *
+            defer
+        }
+
+        reverse_proxy localhost:8080 {
+            header_up Host {http.reverse_proxy.upstream.hostport}
+			header_up X-Forwarded-Proto {scheme}
+        }
+    }
     
 }
