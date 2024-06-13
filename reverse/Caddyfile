@@ -50,11 +50,10 @@ gw.watchit.movie  {
     
     handle {
         respond "Welcome to watchit gateway"
-        close
     }
 
     handle /ipfs/* {
-
+            
         header {
             Access-Control-Allow-Origin *
             Access-Control-Allow-Credentials true
