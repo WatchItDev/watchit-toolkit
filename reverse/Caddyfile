@@ -4,13 +4,6 @@
     debug
 }
 
-(cors) {
-	@origin header Origin {args.0}
-	header @origin {
-		Access-Control-Allow-Origin "{args.0}"
-		Access-Control-Request-Method GET
-	}
-}
 
 (shared_conf) {
     encode zstd gzip
@@ -21,7 +14,6 @@
 }
 
 gw.watchit.movie {
-    import cors "app.watchit.movie"
     import shared_conf
     tls /etc/caddy/cert.pem /etc/caddy/key.pem
     reverse_proxy :8080   
