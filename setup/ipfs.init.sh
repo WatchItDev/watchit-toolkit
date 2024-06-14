@@ -101,21 +101,21 @@ if [ "$IPFS_PROFILE" = "server" ]; then
                      "Paths": ["/ipfs", "/ipns"]
               }
        }' --json
-       ipfs config Datastore.Spec.mounts '[
+       ipfs config Datastore.Spec.mounts "[
               {
-                     "child": {
-                            "bucket": "$IPFS_BUCKET",
-                            "region": "us-west-2",
-                            "rootDirectory": "",
-                            "accessKey": "",
-                            "secretKey": "",
-                            "type": "s3ds"
+                     \"child\": {
+                            \"bucket\": \"$IPFS_BUCKET\",
+                            \"region\": \"us-west-2\",
+                            \"rootDirectory\": \"\",
+                            \"accessKey\": \"\",
+                            \"secretKey\":\"\",
+                            \"type\": \"s3ds\"
                      },
-                     "mountpoint": "/blocks",
-                     "prefix": "s3.datastore",
-                     "type": "measure"
+                     \"mountpoint\": \"/blocks\",
+                     \"prefix\": \"s3.datastore\",
+                     \"type\": \"measure\"
               }
-       ]' --json
+       ]" --json
 
 fi
 
