@@ -101,6 +101,7 @@ if [ "$IPFS_PROFILE" = "server" ]; then
                      "Paths": ["/ipfs", "/ipns"]
               }
        }' --json
+       ipfs config Datastore.BloomFilterSize "1048576" --json
        ipfs config Datastore.Spec.mounts "[
               {
                      \"child\": {
