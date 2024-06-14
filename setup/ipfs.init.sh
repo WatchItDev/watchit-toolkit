@@ -1,11 +1,10 @@
 #!/bin/bash
 # get my public ip
 peers=$(cat peers.json)
-mounts=$(cat s3.json)
-
 export IPFS_PROFILE=${2:local}
 export IPFS_PATH=${1:-~/.ipfs}
 export IPFS_BUCKET=${3:processing-hub}
+
 ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 
 if ! command -v -- "ipfs" >/dev/null; then
