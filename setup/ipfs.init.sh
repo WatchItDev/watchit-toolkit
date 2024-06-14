@@ -5,6 +5,7 @@ mounts=$(cat s3.json)
 
 export IPFS_PROFILE=${2:local}
 export IPFS_PATH=${1:-~/.ipfs}
+export IPFS_BUCKET=${3:processing-hub}
 ip=$(dig +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '"')
 
 if ! command -v -- "ipfs" >/dev/null; then
@@ -89,7 +90,20 @@ if [ "$IPFS_PROFILE" = "server" ]; then
        echo "Running ipfs in server mode"
        ipfs config profile apply server
        ipfs config --bool Swarm.RelayService.Enabled true
-       ipfs config Datastore.Spec.mounts "$mounts" --json
+       ipfs config Datastore.Spec.mounts "[{
+              "child": {
+              "bucket": "$IPFS_BUCKET",
+              "region": "us-west-2",
+              "rootDirectory": "",
+              "accessKey": "",
+              "secretKey": "",
+              "type": "s3ds"
+              },
+              "mountpoint": "/blocks",
+              "prefix": "s3.datastore",
+              "type": "measure"
+       }]" --json
+
        ipfs config Gateway.DeserializedResponses true --bool
        ipfs config Gateway.RootRedirect "" 
        ipfs config Gateway.NoFetch false --bool
