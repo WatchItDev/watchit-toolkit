@@ -111,11 +111,20 @@ if [ "$IPFS_PROFILE" = "server" ]; then
                             \"secretKey\":\"\",
                             \"type\": \"s3ds\"
                      },
-                     \"mountpoint\": \"/\",
+                     \"mountpoint\": \"/blocks\",
                      \"prefix\": \"s3.datastore\",
                      \"type\": \"measure\"
+              },
+              {
+                     \"child\": {
+                            \"compression\": \"none\",
+                            \"path\": \"datastore\",
+                            \"type\": \"levelds\"
+                     },
+                     \"mountpoint\": \"/\",
+                     \"prefix\": \"leveldb.datastore\",
+                     \"type\": \"measure\"
               }
-              
        ]" --json
 
 fi
