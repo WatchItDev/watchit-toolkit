@@ -88,21 +88,7 @@ fi
 if [ "$IPFS_PROFILE" = "server" ]; then
        echo "Running ipfs in server mode"
        ipfs config profile apply server
-       ipfs config --bool Swarm.RelayService.Enabled true
-       ipfs config Datastore.Spec.mounts "[{
-              "child": {
-              "bucket": "$IPFS_BUCKET",
-              "region": "us-west-2",
-              "rootDirectory": "",
-              "accessKey": "",
-              "secretKey": "",
-              "type": "s3ds"
-              },
-              "mountpoint": "/blocks",
-              "prefix": "s3.datastore",
-              "type": "measure"
-       }]" --json
-
+       ipfs config --bool Swarm.RelayService.Enabled tru
        ipfs config Gateway.DeserializedResponses true --bool
        ipfs config Gateway.RootRedirect "" 
        ipfs config Gateway.NoFetch false --bool
@@ -115,6 +101,21 @@ if [ "$IPFS_PROFILE" = "server" ]; then
                      "Paths": ["/ipfs", "/ipns"]
               }
        }' --json
+       ipfs config Datastore.Spec.mounts '[
+              {
+                     "child": {
+                            "bucket": "$IPFS_BUCKET",
+                            "region": "us-west-2",
+                            "rootDirectory": "",
+                            "accessKey": "",
+                            "secretKey": "",
+                            "type": "s3ds"
+                     },
+                     "mountpoint": "/blocks",
+                     "prefix": "s3.datastore",
+                     "type": "measure"
+              }
+       ]' --json
 
 fi
 
