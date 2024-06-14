@@ -111,10 +111,11 @@ if [ "$IPFS_PROFILE" = "server" ]; then
                             \"secretKey\":\"\",
                             \"type\": \"s3ds\"
                      },
-                     \"mountpoint\": \"/blocks\",
+                     \"mountpoint\": \"/\",
                      \"prefix\": \"s3.datastore\",
                      \"type\": \"measure\"
               }
+              
        ]" --json
 
 fi
