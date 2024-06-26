@@ -1,7 +1,7 @@
 {
   "cluster": {
-    "peername": "gmena-ThinkPad-P70",
-    "secret": "4f66276ed8a62912d3aef9f74ffca030c30ddfb300514ac6eff1ed38cf8e5434",
+    "peername": "watchit-cluster",
+    "secret": "c458c9a1635cc9107ffa2c933d70a1c19a481ca68c4904267b662343c026700e1",
     "leave_on_shutdown": false,
     "listen_multiaddress": [
       "/ip4/0.0.0.0/tcp/9096",
