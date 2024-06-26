@@ -2,3 +2,4 @@ node_modules/
 manifest.json
 pdm.txt
 reverse/*.pem
+local/

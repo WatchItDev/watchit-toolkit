@@ -1,7 +1,7 @@
 {
   "cluster": {
     "peername": "watchit-cluster",
-    "secret": "anysecret",
+    "secret": "replace-secret-in-cluster",
     "leave_on_shutdown": false,
     "listen_multiaddress": [
       "/ip4/0.0.0.0/tcp/9096",
@@ -33,7 +33,7 @@
     "pin_only_on_untrusted_peers": false,
     "disable_repinning": true,
     "peer_addresses": [
-      "/ip4/18.199.252.28/tcp/9096/ipfs/12D3KooWL4n8QBg2RZDiQVjjib8xbQrGJUwM5MiHcsuxmhyTs8yY",
+      "/ip4/18.199.252.28/tcp/9096/ipfs/12D3KooWD6AfNUCmroa8gRrwSxWJaPmq1JZgRhQ7U41bpuTGhp2j",
       "/ip4/54.156.171.220/tcp/9096/ipfs/12D3KooWT1TbKrBw6p62LaeCbweQgqeWdLHHZxi3DK3PpGF7Cwhx"
     ]
   },
@@ -41,7 +41,7 @@
     "crdt": {
       "cluster_name": "ipfs-cluster",
       "trusted_peers": [
-        "12D3KooWEXtgkWxbFpw6t7hSePRMy1Zi3negG5fKM9Dv61X2vAeP",
+        "12D3KooWD6AfNUCmroa8gRrwSxWJaPmq1JZgRhQ7U41bpuTGhp2j",
         "12D3KooWL4n8QBg2RZDiQVjjib8xbQrGJUwM5MiHcsuxmhyTs8yY",
         "12D3KooWT1TbKrBw6p62LaeCbweQgqeWdLHHZxi3DK3PpGF7Cwhx"
       ],
