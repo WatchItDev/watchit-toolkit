@@ -1,0 +1,37 @@
+services:
+  ipfs:
+    image: ipfs/kubo:v0.28.0
+    restart: unless-stopped
+    entrypoint: [ "/bin/sh", "/setup/ipfs.init.sh" ]
+    env_file:
+      - .env
+    volumes:
+      - ./setup:/setup
+      - "${IPFS_DATA}:/data/ipfs"
+      - ipfs_fuse:/ipfs
+      - ipns_fuse:/ipns
+    ports:
+      - "4001:4001/tcp"
+      - "4001:4001/udp"
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:5001:5001"
+  caddy:
+    image: caddy:2.8.4
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./setup/Caddyfile:/etc/caddy/Caddyfile
+      - ./cert.pem:/etc/caddy/cert.pem
+      - ./key.pem:/etc/caddy/key.pem
+      - caddy_data:/data
+      - caddy_config:/config
+    network_mode: host
+
+volumes:
+  caddy_data:
+  caddy_config:
+  ipfs_fuse:
+  ipns_fuse:

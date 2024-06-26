@@ -1,0 +1,38 @@
+# On Cloudflare, go to Crypto -> SSL and set it to Full or Full(strict)
+{
+    email info@watchit.movie
+    debug
+}
+
+(cors) {
+  @cors_preflight method OPTIONS
+  @cors header Origin *
+
+  handle @cors_preflight {
+    header Access-Control-Allow-Origin *
+    header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE"
+    header Access-Control-Allow-Headers "Content-Type, Authorization"
+    header Access-Control-Max-Age "3600"
+    respond "" 204
+  }
+
+  handle @cors {
+    header Access-Control-Allow-Origin *
+    header Access-Control-Expose-Headers "Link"
+  }
+}
+
+
+(shared_conf) {
+    encode zstd gzip
+    log {
+	output stdout
+    }
+}
+
+gw.watchit.movie {
+    import cors 
+    import shared_conf
+    tls /etc/caddy/cert.pem /etc/caddy/key.pem
+    reverse_proxy :8080   
+}

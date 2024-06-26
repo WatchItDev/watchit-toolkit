@@ -19,7 +19,7 @@ if ! command -v -- "ipfs" >/dev/null; then
       
 fi
 
-if [ ! -e ${IPFS_PATH}/plugins/go-ds-s3-plugin ]; then
+if [ ! -e /data/ipfs/plugins/go-ds-s3-plugin ]; then
        echo "Intalling S3 datasource"
        wget https://github.com/ipfs/go-ds-s3/releases/download/go-ds-s3-plugin%2Fv0.28.0/go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
        tar -xvzf go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
@@ -57,13 +57,6 @@ ipfs config Addresses.Swarm '[
        "/ip6/::/udp/4001/quic-v1",
        "/ip6/::/udp/4001/quic-v1/webtransport"
 ]' --json
-
-ipfs config Addresses.AppendAnnounce "[
-       \"/ip4/$ip/tcp/4001\",
-       \"/ip4/$ip/udp/4001/quic\",
-       \"/ip4/$ip/udp/4001/quic-v1\",
-       \"/ip4/$ip/udp/4001/quic-v1/webtransport\"
-]" --json
 
 ipfs config Swarm.AddrFilters '[
        "/ip4/100.64.0.0/ipcidr/10",
@@ -140,3 +133,4 @@ ipfs config Datastore.StorageMax "3000GB"
 ipfs config Datastore.StorageGCWatermark 99 --json
 ipfs config Pubsub.Router "gossipsub"
 ipfs config --json Swarm.DisableBandwidthMetrics false
+ipfs daemon --enable-namesys-pubsub --enable-pubsub-experiment --migrate
