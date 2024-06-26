@@ -1,7 +1,7 @@
 {
   "cluster": {
     "peername": "watchit-cluster",
-    "secret": "c458c9a1635cc9107ffa2c933d70a1c19a481ca68c4904267b662343c026700e1",
+    "secret": "anysecret",
     "leave_on_shutdown": false,
     "listen_multiaddress": [
       "/ip4/0.0.0.0/tcp/9096",
