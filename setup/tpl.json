@@ -42,7 +42,6 @@
       "cluster_name": "ipfs-cluster",
       "trusted_peers": [
         "12D3KooWD6AfNUCmroa8gRrwSxWJaPmq1JZgRhQ7U41bpuTGhp2j",
-        "12D3KooWL4n8QBg2RZDiQVjjib8xbQrGJUwM5MiHcsuxmhyTs8yY",
         "12D3KooWT1TbKrBw6p62LaeCbweQgqeWdLHHZxi3DK3PpGF7Cwhx"
       ],
       "batching": {
