@@ -29,6 +29,5 @@ ipfs-cluster-follow myCluster run --init http://127.0.0.1:8080/ipfs/QmbyeQuK5A4W
 
 - Make sure to replace `<clusterName>` with the actual name of your IPFS Cluster.
 - The `<template-configuration-url>` should point to a valid IPFS CID or a URL that contains the template configuration file.
-- The command should be executed in the terminal or command prompt where IPFS Cluster is installed and running.
 
 Note: You can explore some other utility scripts in our `/script` folder
