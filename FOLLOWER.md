@@ -4,7 +4,7 @@
 
 Before starting with this guide, ensure that you have [installed and deployed your own local IPFS node](https://docs.ipfs.tech/install/). Additionally, familiarize yourself with the [official IPFS Collaborative Cluster guide](https://ipfscluster.io/documentation/collaborative/joining/) for essential background information.
 
-This guide will help you to deploy a follower instance in an existing IPFS Cluster.
+This guide will help you deploy a follower instance in the Watchit IPFS Cluster.
 > Current template CID: `QmbyeQuK5A4Wf4hSqeBoCc4pzCQYNSRQv4d2xyCs9mXqN9`
 
 **Usage:**
