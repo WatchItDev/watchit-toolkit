@@ -1,6 +1,5 @@
 {
   "cluster": {
-    "peername": "watchit-cluster",
     "secret": "replace-secret-in-cluster",
     "leave_on_shutdown": false,
     "listen_multiaddress": [
