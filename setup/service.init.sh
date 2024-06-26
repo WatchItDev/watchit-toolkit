@@ -21,5 +21,4 @@ if ! command -v -- "ipfs-cluster-service" > /dev/null; then
        ipfs-cluster-service init --consensus crdt
 fi
 
-echo "/ip4/18.199.252.28/tcp/9096/ipfs/12D3KooWPk6kN64HgKPxEkCPojRt94Kt8PRoKgmkHmg4gM5Gi7jY" >> ~/.ipfs-cluster/peerstore
-ipfs-cluster-service daemon
+ipfs-cluster-service daemon 
