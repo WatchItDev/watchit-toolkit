@@ -80,7 +80,7 @@ ipfs config Swarm.AddrFilters '[
 echo "Running ipfs in server mode"
 ipfs config profile apply server
 
-ipfs config AutoNAT.ServiceMode 'disabled' --json
+ipfs config AutoNAT.ServiceMode 'disabled' 
 ipfs config Gateway.DeserializedResponses true --bool
 ipfs config Gateway.RootRedirect "" 
 ipfs config Gateway.NoFetch true --bool
