@@ -78,7 +78,7 @@ ipfs config Swarm.AddrFilters '[
 
 
 echo "Running ipfs in server mode"
-ipfs config profile apply announce-off
+ipfs config profile apply server
 
 ipfs config AutoNAT.ServiceMode 'disabled' --json
 ipfs config Gateway.DeserializedResponses true --bool
