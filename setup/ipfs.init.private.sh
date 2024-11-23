@@ -97,7 +97,7 @@ ipfs config Datastore.BloomFilterSize "1048576" --json
 ipfs config Datastore.Spec.mounts "[
        {
               \"child\": {
-                     \"bucket\": \"$IPFS_BUCKET\",
+                     \"bucket\": \"processing-hub\",
                      \"region\": \"us-west-2\",
                      \"rootDirectory\": \"\",
                      \"accessKey\": \"\",
