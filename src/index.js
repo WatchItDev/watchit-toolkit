@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-
+import mime from 'mime';
 import { create, globSource } from "kubo-rpc-client";
 import { ffprobe } from "./introspection.js";
 import { hls } from "./processing.js";
@@ -72,19 +72,19 @@ async function videoProcessing(input, output) {
   const outputDir = path.join(output, "hls");
   const lockFile = path.join(output, 'lock');
 
-  if (fs.existsSync(lockFile)) {
-    console.log(`Omiting existing`);
-    return Promise.resolve(outputDir);
-  }
-
-  fs.mkdirSync(outputDir, { recursive: true });
   const videoData = await ffprobe({
     input,
   }).catch((err) => {
     console.log(err.toString());
   });
 
-  if (!videoData?.streams?.length) return false;
+  if (!videoData?.streams?.length) return [false, false];
+  if (fs.existsSync(lockFile)) {
+    console.log(`Omiting existing`);
+    return Promise.resolve([outputDir,  videoData.streams[0]]);
+  }
+
+  fs.mkdirSync(outputDir, { recursive: true });
   const { width } = videoData.streams[0];
   const allowed = Object.keys(representation).reduce((acc, curr) => {
     if (curr <= width) acc.push(representation[curr]);
@@ -100,7 +100,7 @@ async function videoProcessing(input, output) {
   // touch file
   const fd = fs.openSync(lockFile, 'w')
   fs.closeSync(fd);
-  return outputDir;
+  return [outputDir, videoData.streams[0]];
 }
 
 async function* imageProcessing(input, output) {
@@ -115,10 +115,12 @@ async function* imageProcessing(input, output) {
   }
 }
 
-const cidCollections = {};
+const sep = {};
+const manifests = [];
 const processed = new Set();
+const MIN_Q = 7.7;
 
-function* recursivePaths(inputPath) {
+export function* recursivePaths(inputPath) {
   const paths = fs.readdirSync(inputPath, { withFileTypes: true });
   for (const input of paths) {
     const resultingPath = path.join(input.path, input.name);
@@ -141,47 +143,71 @@ function* recursivePaths(inputPath) {
   }
 }
 
+
 try {
   for (const dir of recursivePaths(ROOT_PATH)) {
     const { imdb, path: input } = dir;
+    const jsonData = fs.readFileSync(`${ROOT_PATH}/${imdb}/data.json`);
     const output = path.join(CONVERTED_PATH, imdb);
 
-    if (!(imdb in cidCollections)) {
-      cidCollections[imdb] = {
-        images: {},
+    const jsonObject = JSON.parse(jsonData);
+    if (parseFloat(jsonObject?.rating ?? 0) < MIN_Q) {
+      console.log(`Omitting ${imdb}`);
+      continue;
+    }
+
+    fs.mkdirSync(output, { recursive: true });
+    if (!(imdb in sep)) {
+      sep[imdb] = {
+        "s": {},
+        "d": {},
+        "t": {},
+        "x": {}
       };
     }
 
     if (input.includes(".mp4")) {
       console.log(`Processing video for ${imdb}`);
-      const hlsOutput = await videoProcessing(input, output);
+      const stats = fs.statSync(input);
+      const [hlsOutput, videoData] = await videoProcessing(input, output);
       const glob = globSource(hlsOutput, "**/*");
+      console.log("Adding processed video");
+
+      sep[imdb]["t"] = {
+        "size": stats.size,
+        "width": videoData.width,
+        "height": videoData.height,
+        "length": videoData.duration_ts
+      }
 
       for await (const file of node.addAll(glob, {
         wrapWithDirectory: true,
         cidVersion: 1,
       })) {
         if (file.path == "") {
-          cidCollections[imdb]["video"] = file.cid.toString();
+          sep[imdb]["s"]["cid"] = file.cid.toString();
+          sep[imdb]["s"]["path"] = "hls/index.m3u8";
+          sep[imdb]["s"]["type"] = mime.getType(path.join(hlsOutput, sep[imdb]["s"]["path"]))
         }
       }
     }
 
     if (input.includes("image.jpg")) {
       console.log(`Processing image for ${imdb}`);
+      sep[imdb]["x"]["attachments"] = [];
       for await (const [key, buffer] of imageProcessing(input, output)) {
         const fileCid = await node.add(buffer, { cidVersion: 1 });
-        cidCollections[imdb]["images"][key] = fileCid.cid.toString();
+        sep[imdb]["x"]["attachments"].push({
+          title: key,
+          type: mime.getType(input),
+          cid: fileCid.cid.toString(),
+          description: "",
+        })
       }
     }
 
     if (input.includes(".json")) {
       console.log(`Processing data for ${imdb}`);
-      if (!fs.existsSync(output)) fs.mkdirSync(output);
-      fs.copyFileSync(input, `${output}/data.json`);
-
-      const jsonData = fs.readFileSync(`${output}/data.json`);
-      const jsonObject = JSON.parse(jsonData);
 
       jsonObject["id"] = jsonObject["imdb_code"];
       jsonObject["trailerUrl"] = jsonObject["trailer_code"];
@@ -194,18 +220,30 @@ try {
       delete jsonObject["mpa_rating"];
       delete jsonObject["group_name"];
 
-      const buffer = JSON.stringify(jsonObject);
-      const jsonCid = await node.add(buffer, {
-        cidVersion: 1,
-      });
+      sep[imdb]["d"]["title"] = jsonObject["title"];
+      sep[imdb]["d"]["description"] = jsonObject["synopsis"];
+      sep[imdb]["d"]["genres"] = jsonObject["genres"];
+      sep[imdb]["d"]["runtime"] = jsonObject["runtime"];
+      sep[imdb]["d"]["year"] = jsonObject["year"];
+      // sep[imdb]["x"]["rating"] = jsonObject["rating"];
 
-      cidCollections[imdb]["data"] = jsonCid.cid.toString();
     }
+    
   }
 
+  for(const value of Object.values(sep) ){
+    const buffer = JSON.stringify(value);
+    const jsonCid = await node.add(buffer, {
+      cidVersion: 1,
+    });
+
+    manifests.push(jsonCid.cid.toString())
+  }
+
+
   const manifest = {
-    count: Object.keys(cidCollections).length,
-    manifest: Object.values(cidCollections),
+    count: manifests.length,
+    manifest: manifests,
   };
 
   const bytes = JSON.stringify(manifest);

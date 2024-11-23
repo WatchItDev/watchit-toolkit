@@ -1,6 +1,6 @@
 #!/bin/bash
 # get my public ip
-peers=$(cat peers.json)
+# peers=$(cat peers.json)
 export IPFS_PROFILE=${2:local}
 export IPFS_PATH=${1:-~/.ipfs}
 export IPFS_BUCKET=${3:processing-hub}
@@ -19,22 +19,24 @@ if ! command -v -- "ipfs" >/dev/null; then
       
 fi
 
-if [ ! -e /data/ipfs/plugins/go-ds-s3-plugin ]; then
-       echo "Intalling S3 datasource"
-       wget https://github.com/ipfs/go-ds-s3/releases/download/go-ds-s3-plugin%2Fv0.28.0/go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
-       tar -xvzf go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
-       mkdir -p ${IPFS_PATH}/plugins
-       cp go-ds-s3-plugin/go-ds-s3-plugin ${IPFS_PATH}/plugins
-fi
+# if [ ! -e /data/ipfs/plugins/go-ds-s3-plugin ]; then
+#        echo "Intalling S3 datasource"
+#        wget https://github.com/ipfs/go-ds-s3/releases/download/go-ds-s3-plugin%2Fv0.28.0/go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
+#        tar -xvzf go-ds-s3-plugin_v0.28.0_linux_amd64.tar.gz
+#        mkdir -p ${IPFS_PATH}/plugins
+#        cp go-ds-s3-plugin/go-ds-s3-plugin ${IPFS_PATH}/plugins
+# fi
 
+echo "Running mode ${IPFS_PROFILE}"
 echo "Running ipfs in ${IPFS_PATH}"
+
 if [ ! -e ${IPFS_PATH}/config ]; then
        ipfs init --empty-repo
 fi
 
 # shellcheck disable=SC2006
 # http://docs.ipfs.tech.ipns.localhost:8080/how-to/peering-with-content-providers/#content-provider-list
-ipfs config Peering.Peers "$peers" --json
+# ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
 
@@ -42,8 +44,8 @@ ipfs config --json Import.CidVersion '1'
 ipfs config --json Experimental.FilestoreEnabled true
 ipfs config --json Experimental.UrlstoreEnabled false
 
-ipfs config Swarm.Transports.Network.Websocket --json true
-ipfs config Swarm.Transports.Network.WebTransport --json true
+ipfs config Swarm.Transports.Network.Websocket --json false
+ipfs config Swarm.Transports.Network.WebTransport --json false
 ipfs config Swarm.Transports.Network.WebRTCDirect --json false
 ipfs config Swarm.ConnMgr.LowWater 30 --json
 ipfs config Swarm.ConnMgr.HighWater 50 --json
@@ -124,8 +126,9 @@ if [ "$IPFS_PROFILE" = "server" ]; then
 fi
 
 # https://github.com/nextcloud/all-in-one/discussions/1970
-echo "net.core.rmem_max = 2500000" | sudo tee /etc/sysctl.d/ipfs.conf
-sudo sysctl "net.core.rmem_max=2500000"
+echo "net.core.rmem_max = 7500000" | sudo tee /etc/sysctl.d/ipfs.conf
+sudo sysctl -w net.core.rmem_max=7500000
+sudo sysctl -w net.core.wmem_max=7500000
 sudo sysctl -p
 
 ipfs config Datastore.GCPeriod "144h"
