@@ -39,7 +39,7 @@ fi
 # ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/0.0.0.0/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/0.0.0.0/tcp/8080'
-ipfs bootstrap rm — all
+ipfs bootstrap rm all
 
 ipfs config --json Import.CidVersion '1'
 ipfs config --json Experimental.FilestoreEnabled true
