@@ -6,6 +6,7 @@ jq --compact-output '.manifest[]' $1 | while read i; do
     medium=$(jq --raw-output '.x.attachments[1].cid' <<<$data)
     large=$(jq --raw-output '.x.attachments[2].cid' <<<$data)
 
+    echo $data
     ipfs pin add $small
     ipfs pin add $medium
     ipfs pin add $large
