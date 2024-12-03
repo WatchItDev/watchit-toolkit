@@ -86,13 +86,7 @@ ipfs config Gateway.RootRedirect ""
 ipfs config Gateway.NoFetch true --bool
 ipfs config Gateway.NoDNSLink false --bool
 ipfs config Gateway.DeserializedResponses true --bool
-# ipfs config Gateway.HTTPHeaders '{}' --json
-# ipfs config Gateway.PublicGateways '{
-#        "gw.watchit.movie": {
-#               "UseSubdomains": false,
-#               "Paths": ["/ipfs", "/ipns"]
-#        }
-# }' --json
+
 ipfs config Datastore.BloomFilterSize "1048576" --json
 ipfs config Datastore.Spec.mounts "[
        {

@@ -81,7 +81,7 @@ async function videoProcessing(input, output) {
   if (!videoData?.streams?.length) return [false, false];
   if (fs.existsSync(lockFile)) {
     console.log(`Omiting existing`);
-    return Promise.resolve([outputDir,  videoData.streams[0]]);
+    return Promise.resolve([outputDir, videoData.streams[0]]);
   }
 
   fs.mkdirSync(outputDir, { recursive: true });
@@ -127,7 +127,7 @@ export function* recursivePaths(inputPath) {
     if (fs.lstatSync(resultingPath).isDirectory()) {
       yield* recursivePaths(resultingPath);
     } else {
-      if ([".mp4", "image.jpg", ".json"].some((i) => input.name.includes(i))) {
+      if ([".mp4", "image.jpg", ".json", "wallpaper.png"].some((i) => input.name.includes(i))) {
         const root = input.path.replace(ROOT_PATH, "").split(path.sep);
         const imdb = root.shift();
         // processed.add(imdb);
@@ -155,6 +155,7 @@ try {
       console.log(`Omitting ${imdb}`);
       continue;
     }
+
 
     fs.mkdirSync(output, { recursive: true });
     if (!(imdb in sep)) {
@@ -185,8 +186,8 @@ try {
         cidVersion: 1,
       })) {
         if (file.path == "") {
+          sep[imdb]["s"]["path"] = "index.m3u8";
           sep[imdb]["s"]["cid"] = file.cid.toString();
-          sep[imdb]["s"]["path"] = "hls/index.m3u8";
           sep[imdb]["s"]["type"] = mime.getType(path.join(hlsOutput, sep[imdb]["s"]["path"]))
         }
       }
@@ -204,6 +205,24 @@ try {
           description: "",
         })
       }
+    }
+
+    if (input.includes("wallpaper.png")) {
+      console.log(`Processing wallpaper for ${imdb}`);
+
+      const fileOut = path.join(output, `wallpaper.jpg`);
+      const sharpen = sharp(input).resize(1456, 816);
+      const imageBytes = await sharpen.toBuffer();
+      await sharpen.toFile(fileOut);
+
+      const fileCid = await node.add(imageBytes, { cidVersion: 1 });
+      sep[imdb]["x"]["attachments"].push({
+        title: "wallpaper",
+        type: mime.getType(input),
+        cid: fileCid.cid.toString(),
+        description: "",
+      })
+
     }
 
     if (input.includes(".json")) {
@@ -228,10 +247,10 @@ try {
       // sep[imdb]["x"]["rating"] = jsonObject["rating"];
 
     }
-    
+
   }
 
-  for(const value of Object.values(sep) ){
+  for (const value of Object.values(sep)) {
     const buffer = JSON.stringify(value);
     const jsonCid = await node.add(buffer, {
       cidVersion: 1,
