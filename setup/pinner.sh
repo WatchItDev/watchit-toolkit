@@ -1,7 +1,7 @@
 jq --compact-output '.manifest[]' $1 | while read i; do
 
     input="${i//\"}"
-    data=$(ipfs cat ${input})
+    data=$(ipfs ipfs cat ${input})
     video=$(jq --raw-output '.s.cid' <<<$data)
     small=$(jq --raw-output '.x.attachments[0].cid' <<<$data)
     medium=$(jq --raw-output '.x.attachments[1].cid' <<<$data)
@@ -9,14 +9,14 @@ jq --compact-output '.manifest[]' $1 | while read i; do
     wallpaper=$(jq --raw-output '.x.attachments[3].cid' <<<$data)
 
     echo $data
-    docker-compose exec ipfs pin add $input;
-    docker-compose exec ipfs pin add $small
-    docker-compose exec ipfs pin add $medium
-    docker-compose exec ipfs pin add $large
-    docker-compose exec ipfs pin add $wallpaper
+    ipfs pin add $input;
+    ipfs pin add $small
+    ipfs pin add $medium
+    ipfs pin add $large
+    ipfs pin add $wallpaper
     echo "Pinned images"
 
-    docker-compose exec ipfs pin add $video
+    ipfs pin add $video
     echo "Pinned video"
     echo "Finished pinning"
 

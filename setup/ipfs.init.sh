@@ -39,6 +39,7 @@ fi
 # ipfs config Peering.Peers "$peers" --json
 ipfs config Addresses.API '/ip4/127.0.0.1/tcp/5001'
 ipfs config Addresses.Gateway '/ip4/127.0.0.1/tcp/8080'
+ipfs bootstrap rm all
 
 ipfs config --json Import.CidVersion '1'
 ipfs config --json Experimental.FilestoreEnabled true
@@ -131,6 +132,7 @@ sudo sysctl -w net.core.rmem_max=7500000
 sudo sysctl -w net.core.wmem_max=7500000
 sudo sysctl -p
 
+ipfs config Routing.Type "dht"
 ipfs config Datastore.GCPeriod "144h"
 ipfs config Datastore.StorageMax "3000GB"
 ipfs config Datastore.StorageGCWatermark 99 --json
