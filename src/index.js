@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import mime from 'mime';
+import { base16 } from "multiformats/bases/base16"
 import { create, globSource } from "kubo-rpc-client";
 import { ffprobe } from "./introspection.js";
 import { hls } from "./processing.js";
@@ -118,7 +119,7 @@ async function* imageProcessing(input, output) {
 const sep = {};
 const manifests = [];
 const processed = new Set();
-const MIN_Q = 7.7;
+const MIN_Q = 7.6;
 
 export function* recursivePaths(inputPath) {
   const paths = fs.readdirSync(inputPath, { withFileTypes: true });
@@ -127,7 +128,7 @@ export function* recursivePaths(inputPath) {
     if (fs.lstatSync(resultingPath).isDirectory()) {
       yield* recursivePaths(resultingPath);
     } else {
-      if ([".mp4", "image.jpg", ".json", "wallpaper.png"].some((i) => input.name.includes(i))) {
+      if ([".mp4", ".mkv", "image.jpg", ".json", "wallpaper.png"].some((i) => input.name.includes(i))) {
         const root = input.path.replace(ROOT_PATH, "").split(path.sep);
         const imdb = root.shift();
         // processed.add(imdb);
@@ -152,11 +153,11 @@ try {
 
     const jsonObject = JSON.parse(jsonData);
     if (parseFloat(jsonObject?.rating ?? 0) < MIN_Q) {
-      console.log(`Omitting ${imdb}`);
+    // if (imdb != "tt0063350") {
       continue;
     }
 
-
+    console.log(`Processing ${imdb}`);
     fs.mkdirSync(output, { recursive: true });
     if (!(imdb in sep)) {
       sep[imdb] = {
@@ -167,7 +168,7 @@ try {
       };
     }
 
-    if (input.includes(".mp4")) {
+    if (input.includes(".mp4") || input.includes('.mkv')) {
       console.log(`Processing video for ${imdb}`);
       const stats = fs.statSync(input);
       const [hlsOutput, videoData] = await videoProcessing(input, output);
@@ -183,6 +184,13 @@ try {
 
       for await (const file of node.addAll(glob, {
         wrapWithDirectory: true,
+        // Use a 1 MB chunk size to reduce the number of chunks and minimize IPFS overhead.
+        // This is ideal for static content (e.g., movies or finalized files) where:
+        // - The probability of data duplication is low, especially in a private IPFS network.
+        // - Larger chunks reduce the number of block requests, improving performance during retrieval.
+        // Alternative: Use "rabin-512000-1048576-2097152" for dynamic content or when small edits 
+        // may occur, as it optimizes deduplication by creating chunks based on content patterns.
+        chunker: "size-1048576",
         cidVersion: 1,
       })) {
         if (file.path == "") {
@@ -209,16 +217,13 @@ try {
 
     if (input.includes("wallpaper.png")) {
       console.log(`Processing wallpaper for ${imdb}`);
-
-      const fileOut = path.join(output, `wallpaper.jpg`);
-      const sharpen = sharp(input).resize(1456, 816);
+      const sharpen = sharp(input).resize(1456, 816).toFormat('jpeg');
       const imageBytes = await sharpen.toBuffer();
-      await sharpen.toFile(fileOut);
 
       const fileCid = await node.add(imageBytes, { cidVersion: 1 });
       sep[imdb]["x"]["attachments"].push({
         title: "wallpaper",
-        type: mime.getType(input),
+        type: "image/jpeg",
         cid: fileCid.cid.toString(),
         description: "",
       })
@@ -250,13 +255,18 @@ try {
 
   }
 
-  for (const value of Object.values(sep)) {
+  for (const [key, value] of Object.entries(sep)) {
     const buffer = JSON.stringify(value);
+    if (value?.x.attachments?.length < 4){
+        console.log(`Missing wallpaper ${key}`)
+    }
+
     const jsonCid = await node.add(buffer, {
       cidVersion: 1,
     });
 
-    manifests.push(jsonCid.cid.toString())
+    console.log(jsonCid.cid.toString())
+    manifests.push(jsonCid.cid.toString(base16.encoder))
   }
 
 
@@ -272,6 +282,7 @@ try {
   });
 
   console.log(manifestCid.cid.toString());
+
   fs.writeFileSync("manifest.json", JSON.stringify(manifest));
 } catch (e) {
   console.log(e);
