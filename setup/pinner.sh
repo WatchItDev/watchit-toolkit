@@ -1,7 +1,7 @@
 jq --compact-output '.manifest[]' $1 | while read i; do
 
     input="${i//\"}"
-    data=$(ipfs ipfs cat ${input})
+    data=$(ipfs cat ${input})
     video=$(jq --raw-output '.s.cid' <<<$data)
     small=$(jq --raw-output '.x.attachments[0].cid' <<<$data)
     medium=$(jq --raw-output '.x.attachments[1].cid' <<<$data)
