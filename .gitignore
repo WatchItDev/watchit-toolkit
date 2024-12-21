@@ -3,3 +3,5 @@ manifest.json
 pdm.txt
 reverse/*.pem
 local/
+
+deprecated/
